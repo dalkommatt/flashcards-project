@@ -1,21 +1,30 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { createDeck } from "../utils/api";
-export default function CreateDeck() {
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
+import { readDeck, updateDeck } from "../utils/api";
+import { useParams } from "react-router-dom";
+
+export default function EditDeck() {
+  const { deckId } = useParams();
   const navigate = useNavigate();
+  const [deck, setDeck] = useState({});
+
+  useEffect(() => {
+    if (deckId === undefined) return;
+    async function loadDeck() {
+      const loadedDeck = await readDeck(deckId);
+      setDeck(loadedDeck);
+    }
+    loadDeck();
+  }, [deckId]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Create a new deck object and save it
-    const res = await createDeck({ name, description }, null);
-    // Navigate to the Deck screen
+    const res = await updateDeck(deck);
     navigate(`/decks/${res.id}`);
   };
 
   const handleCancel = () => {
-    navigate("/");
+    navigate(`/decks/${deckId}`);
   };
 
   return (
@@ -26,11 +35,11 @@ export default function CreateDeck() {
             <a href="/">Home</a>
           </li>
           <li className="breadcrumb-item active" aria-current="page">
-            Create Deck
+            Edit Deck
           </li>
         </ol>
       </nav>
-      <h1 className="text-5xl font-semibold">Create Deck</h1>
+      <h1 className="text-5xl font-semibold">Edit Deck</h1>
       <form onSubmit={handleSubmit} className="flex flex-col my-4">
         <div className="flex flex-col">
           <label htmlFor="name">Name</label>
@@ -39,8 +48,13 @@ export default function CreateDeck() {
             placeholder="Deck Name"
             type="text"
             id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={deck.name}
+            onChange={(e) =>
+              setDeck((currentDeck) => ({
+                ...currentDeck,
+                name: e.target.value,
+              }))
+            }
             required
           />
         </div>
@@ -50,8 +64,13 @@ export default function CreateDeck() {
             className="h-40 w-full border border-1 rounded p-2 my-2"
             placeholder="Brief description of the deck"
             id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={deck.description}
+            onChange={(e) =>
+              setDeck((currentDeck) => ({
+                ...currentDeck,
+                description: e.target.value,
+              }))
+            }
             required
           />
         </div>

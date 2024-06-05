@@ -6,7 +6,11 @@ import { useParams } from "react-router-dom";
 export default function EditDeck() {
   const { deckId } = useParams();
   const navigate = useNavigate();
-  const [deck, setDeck] = useState({});
+  const [deck, setDeck] = useState({
+    name: "",
+    description: "",
+    cards: [],
+  });
 
   useEffect(() => {
     if (deckId === undefined) return;

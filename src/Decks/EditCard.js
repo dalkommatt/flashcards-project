@@ -8,14 +8,18 @@ export default function EditCard() {
   const [back, setBack] = useState("");
   const navigate = useNavigate();
   const { deckId, cardId } = useParams();
-  const [deck, setDeck] = useState({});
+  const [deck, setDeck] = useState({
+    name: "",
+    description: "",
+    cards: [],
+  });
 
   useEffect(() => {
     async function loadDeck() {
       const loadedDeck = await readDeck(deckId);
       console.log(loadedDeck);
       console.log(cardId);
-      const card = deck.cards?.find((card) => card.id == cardId);
+      const card = loadedDeck.cards?.find((card) => card.id === parseInt(cardId));
       console.log(card);
       setDeck(loadedDeck);
       setFront(card?.front);
@@ -49,7 +53,7 @@ export default function EditCard() {
             <a href={`/decks/${deckId}`}>{deck?.name}</a>
           </li>
           <li className="breadcrumb-item active" aria-current="page">
-            Edit Card
+            Edit Card {cardId}
           </li>
         </ol>
       </nav>

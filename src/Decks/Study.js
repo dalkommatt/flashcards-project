@@ -9,7 +9,7 @@ export default function Study({ decks }) {
   const deck = decks.find((deck) => deck.id === parseInt(deckId));
   const [cardIndex, setCardIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
-  const [card, setCard] = useState({});
+  const [card, setCard] = useState();
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -49,7 +49,7 @@ export default function Study({ decks }) {
               {/*  <p>{deck[cardIndex].length} cards</p> */}
             </div>
             <div className="flex text-lg pt-2 px-3">
-              {flipped ? card.back : card.front}
+              {flipped ? card?.back : card?.front}
             </div>
           </div>
           <div className="flex flex-row w-full px-3 justify-between">
@@ -62,24 +62,26 @@ export default function Study({ decks }) {
               >
                 Flip
               </button>
-              <button
-                onClick={() => {
-                  if (cardIndex === deck.cards.length - 1) {
-                    if (window.confirm("Restart cards?")) {
-                      setCardIndex(0);
+              {flipped && (
+                <button
+                  onClick={() => {
+                    if (cardIndex === deck.cards.length - 1) {
+                      if (window.confirm("Restart cards?")) {
+                        setCardIndex(0);
+                      } else {
+                        // push to home screen
+                        navigate("/");
+                      }
                     } else {
-                      // push to home screen
-                      navigate("/");
+                      setCardIndex((current) => current + 1);
+                      setFlipped(false);
                     }
-                  } else {
-                    setCardIndex((current) => current + 1);
-                    setFlipped(false);
-                  }
-                }}
-                className="btn btn-primary"
-              >
-                Next
-              </button>
+                  }}
+                  className="btn btn-primary"
+                >
+                  Next
+                </button>
+              )}
             </div>
           </div>
         </div>

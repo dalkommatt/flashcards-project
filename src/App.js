@@ -6,7 +6,7 @@ import "./App.css";
  * App is a wrapper for <Layout>, you should not need to change this file.
  */
 
-function App() {
+export function App() {
   return (
     <div className="app-routes">
         <Layout />         

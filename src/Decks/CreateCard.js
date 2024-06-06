@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { createCard } from "../utils/api";
 import { useParams } from "react-router-dom";
-
+import { CardForm } from "./CardForm";
 export default function CreateCard({ decks }) {
   const [front, setFront] = useState("");
   const [back, setBack] = useState("");
@@ -40,31 +40,12 @@ export default function CreateCard({ decks }) {
         </ol>
       </nav>
       <h1 className="h2">{deck?.name}: Add Card</h1>
-      <form className="flex flex-col my-4">
-        <div className="flex flex-col">
-          <label htmlFor="front">Front</label>
-          <textarea
-            className="h-20 w-full border border-1 rounded p-2 my-2"
-            placeholder="Front side of card"
-            type="text"
-            id="front"
-            value={front}
-            onChange={(e) => setFront(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="back">Back</label>
-          <textarea
-            className="h-20 w-full border border-1 rounded p-2 my-2"
-            placeholder="Back side of card"
-            id="back"
-            value={back}
-            onChange={(e) => setBack(e.target.value)}
-            required
-          />
-        </div>
-        <div className="inline-flex space-x-2">
+      <CardForm
+        front={front}
+        back={back}
+        setFront={setFront}
+        setBack={setBack}
+        buttonOne={
           <button
             type="button"
             className="btn btn-secondary bg-[#6c757d]"
@@ -72,6 +53,8 @@ export default function CreateCard({ decks }) {
           >
             Done
           </button>
+        }
+        buttonTwo={
           <button
             type="submit"
             className="btn btn-primary bg-[#007bff]"
@@ -79,8 +62,8 @@ export default function CreateCard({ decks }) {
           >
             Save
           </button>
-        </div>
-      </form>
+        }
+      />
     </div>
   );
 }

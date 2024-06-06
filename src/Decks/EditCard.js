@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { readDeck, updateCard } from "../utils/api"; // Replace with appropriate update function
 import { useParams } from "react-router-dom";
+import { CardForm } from "./CardForm";
 
 export default function EditCard() {
   const [front, setFront] = useState("");
@@ -19,26 +20,30 @@ export default function EditCard() {
       const loadedDeck = await readDeck(deckId);
       console.log(loadedDeck);
       console.log(cardId);
-      const card = loadedDeck.cards?.find((card) => card.id === parseInt(cardId));
+      const card = loadedDeck.cards?.find(
+        (card) => card.id === parseInt(cardId)
+      );
       console.log(card);
       setDeck(loadedDeck);
       setFront(card?.front);
       setBack(card?.back);
     }
     loadDeck();
-  }, [deckId]);
+  }, [cardId, deckId]);
 
-  const handleEdit = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Update the card object
-    const res = await updateCard(deckId, { front, back }, null); // Replace with appropriate update function
-    if (res) {
-      setFront("");
-      setBack("");
-    }
+    const updatedCard = {
+      id: parseInt(cardId),
+      front,
+      back,
+      deckId: parseInt(deckId),
+    };
+    await updateCard(updatedCard);
+    navigate(`/decks/${deckId}`);
   };
 
-  const handleDone = () => {
+  const handleCancel = () => {
     navigate(`/decks/${deckId}`);
   };
 
@@ -58,47 +63,30 @@ export default function EditCard() {
         </ol>
       </nav>
       <h1 className="h2">Edit Card</h1>
-      <form className="flex flex-col my-4">
-        <div className="flex flex-col">
-          <label htmlFor="front">Front</label>
-          <textarea
-            className="h-20 w-full border border-1 rounded p-2 my-2"
-            placeholder="Front side of card"
-            type="text"
-            id="front"
-            value={front}
-            onChange={(e) => setFront(e.target.value)}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label htmlFor="back">Back</label>
-          <textarea
-            className="h-20 w-full border border-1 rounded p-2 my-2"
-            placeholder="Back side of card"
-            id="back"
-            value={back}
-            onChange={(e) => setBack(e.target.value)}
-            required
-          />
-        </div>
-        <div className="inline-flex space-x-2">
+      <CardForm
+        front={front}
+        back={back}
+        setFront={setFront}
+        setBack={setBack}
+        buttonOne={
           <button
             type="button"
             className="btn btn-secondary bg-[#6c757d]"
-            onClick={handleDone}
+            onClick={handleCancel}
           >
-            Done
+            Cancel
           </button>
+        }
+        buttonTwo={
           <button
             type="submit"
             className="btn btn-primary bg-[#007bff]"
-            onClick={handleEdit}
+            onClick={handleSubmit}
           >
-            Edit
+            Submit
           </button>
-        </div>
-      </form>
+        }
+      />
     </div>
   );
 }

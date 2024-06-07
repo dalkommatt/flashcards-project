@@ -23,8 +23,7 @@ export default function Study({ decks }) {
     return () => abortController.abort();
   }, [cardIndex, deckId]);
 
-  if (deck) {
-    //console.log(deck[cardIndex]);
+  if (deck && cards) {
     return (
       <div>
         <nav aria-label="breadcrumb">
@@ -45,7 +44,7 @@ export default function Study({ decks }) {
           <>
             <h3 className="h3 my-4">Not enough cards</h3>
             <p>
-              You need at least 3 card to study. There are {cards?.length} cards
+              You need at least 3 card to study. There are {cards.length} cards
               in this deck.
             </p>
           </>
@@ -54,7 +53,7 @@ export default function Study({ decks }) {
             <div>
               <div className="flex flex-row justify-between w-full px-3">
                 <h3 className="text-2xl">
-                  Card {cardIndex + 1} of {deck.cards?.length}
+                  Card {cardIndex + 1} of {deck.cards.length}
                 </h3>
                 {/*  <p>{deck[cardIndex].length} cards</p> */}
               </div>

@@ -3,8 +3,10 @@ import { Link, useParams } from "react-router-dom";
 import { readDeck } from "../utils/api/index.js";
 import { Plus, BookOpen, Trash, Pencil } from "lucide-react";
 import { deleteDeck, deleteCard } from "../utils/api";
+import { useNavigate } from "react-router-dom";
 
 export default function Deck() {
+  const navigate = useNavigate();
   const { deckId } = useParams();
   const [deck, setDeck] = useState({});
 
@@ -58,7 +60,7 @@ export default function Deck() {
           onClick={() => {
             window.confirm("Delete this deck?") &&
               deleteDeck(deck.id) &&
-              window.location.reload();
+              navigate("/");
           }}
           className="border border-1 rounded p-2 hover:bg-red-600 bg-red-500 inline-flex"
         >
